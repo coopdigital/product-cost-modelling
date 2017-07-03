@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  {{ div|safe }}
+{% endblock %}
+
+{% block js %}
+  {{ block.super }}
+  {{ script|safe }}
+{% endblock %}
