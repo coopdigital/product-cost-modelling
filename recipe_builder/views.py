@@ -34,12 +34,4 @@ class RecipeBuilder(TemplateView):
             start_date=self.start_date,
             transformation='normalize')
 
-        fig = Figure(
-            title='Commodity index',
-            x_axis_type='datetime', )
-
-        fig.line(x=commodity_data.index, y=commodity_data['Value'])
-
-        context['script'], context['div'] = components(fig)
-
         return context
