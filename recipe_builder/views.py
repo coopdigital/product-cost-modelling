@@ -1,5 +1,3 @@
-from bokeh.embed import components
-from bokeh.plotting import Figure
 from django.conf import settings
 from django.views.generic import TemplateView
 import pandas as pd
