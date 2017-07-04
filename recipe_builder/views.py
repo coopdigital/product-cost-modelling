@@ -37,22 +37,25 @@ class RecipeBuilder(TemplateView):
         price_indices = {}
 
         for commodity in commodities:
-            prices = quandl.get(
+            index = quandl.get(
                 commodity['code'],
                 collapse=self.frequency,
                 start_date=self.start_date,
                 transformation='normalize')
 
+            # Allows straightforward multiplication for composite
+            index['Value'] = index['Value'] / 100
+
             # TODO: Return indices adjusted for target currencies
             price_indices[commodity['display']] = {
-                'usd': prices['Value'].tolist()
+                'usd': index['Value'].tolist()
             }
             price_indices[commodity['display']]['usd'].insert(0, commodity['display'])
 
         # TODO: Check that all commodities return the same date values
-        prices.reset_index(inplace=True)
-        prices['Date'] = prices['Date'].dt.strftime('%Y-%m-%d')
-        dates = prices['Date'].tolist()
+        index.reset_index(inplace=True)
+        index['Date'] = index['Date'].dt.strftime('%Y-%m-%d')
+        dates = index['Date'].tolist()
         dates.insert(0, 'date')
 
         context.update({
