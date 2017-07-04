@@ -1,5 +1,3 @@
-from bokeh.embed import components
-from bokeh.plotting import Figure
 from django.conf import settings
 from django.views.generic import TemplateView
 import pandas as pd
@@ -18,14 +16,6 @@ class RecipeBuilder(TemplateView):
     def get_context_data(self, **kwargs):
         context = super(RecipeBuilder, self).get_context_data(**kwargs)
 
-        commodity_code = 'COM/WHEAT_MN'
-
-        commodity_data = quandl.get(
-            commodity_code,
-            collapse=self.frequency,
-            start_date=self.start_date,
-            transformation='normalize')
-
         currency_code = 'BOE/XUDLGBD'
 
         currency_data = quandl.get(
@@ -34,12 +24,41 @@ class RecipeBuilder(TemplateView):
             start_date=self.start_date,
             transformation='normalize')
 
-        fig = Figure(
-            title='Commodity index',
-            x_axis_type='datetime', )
+        commodities = [{
+            'display': 'Wheat',
+            'code': 'COM/WHEAT_MN',
+        }, {
+            'display': 'Corn',
+            'code': 'COM/CORN_2',
+        }]
 
-        fig.line(x=commodity_data.index, y=commodity_data['Value'])
+        price_indices = {}
 
-        context['script'], context['div'] = components(fig)
+        for commodity in commodities:
+            index = quandl.get(
+                commodity['code'],
+                collapse=self.frequency,
+                start_date=self.start_date,
+                transformation='normalize')
+
+            # Allows straightforward multiplication for composite
+            index['Value'] = index['Value'] / 100
+
+            # TODO: Return indices adjusted for target currencies
+            price_indices[commodity['display']] = {
+                'usd': index['Value'].tolist()
+            }
+            price_indices[commodity['display']]['usd'].insert(0, commodity['display'])
+
+        # TODO: Check that all commodities return the same date values
+        index.reset_index(inplace=True)
+        index['Date'] = index['Date'].dt.strftime('%Y-%m-%d')
+        dates = index['Date'].tolist()
+        dates.insert(0, 'date')
+
+        context.update({
+            'dates': dates,
+            'price_indices': price_indices,
+        })
 
         return context

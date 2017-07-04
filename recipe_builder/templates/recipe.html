@@ -1,10 +1,63 @@
 {% extends 'base.html' %}
 
 {% block content %}
-  {{ div|safe }}
+  <div id="chart"></div>
 {% endblock %}
 
 {% block js %}
   {{ block.super }}
-  {{ script|safe }}
+  <script type="text/javascript">
+    var buildComposite = function(dates, blend, priceIndices){
+      var compositeIndex = [];
+      compositeIndex.length = dates.length
+      compositeIndex.fill(0)
+      compositeIndex[0] = 'Blend'
+
+      blend.forEach(function(element){
+        index = priceIndices[element.display].usd
+
+        for (var i = 1; i < index.length; i++) {
+          compositeIndex[i] += element.percentage * index[i]
+        }
+      });
+
+      return compositeIndex;
+    }
+
+    $(function() {
+      var dates = {{ dates|safe }};
+      var priceIndices = {{ price_indices|safe }};
+
+      var blend = [{
+        'display': 'Corn',
+        'percentage': 0.2
+      }, {
+        'display': 'Wheat',
+        'percentage': 0.8
+      }]
+
+      var composite = buildComposite(dates, blend, priceIndices);
+
+      var chart = c3.generate({
+        data: {
+          x: 'date',
+          columns: [
+            dates,
+            priceIndices['Wheat'].usd,
+            priceIndices['Corn'].usd,
+            composite
+          ]
+        },
+        axis: {
+          x: {
+            type: 'timeseries',
+            tick: {
+              format: '%b \'%y'
+            }
+          }
+        }
+      });
+
+    });
+  </script>
 {% endblock %}
