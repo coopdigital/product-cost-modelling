@@ -43,8 +43,11 @@ class RecipeBuilder(TemplateView):
                 start_date=self.start_date,
                 transformation='normalize')
 
-            price_indices[commodity['display']] = prices['Value'].tolist()
-            price_indices[commodity['display']].insert(0, commodity['display'])
+            # TODO: Return indices adjusted for target currencies
+            price_indices[commodity['display']] = {
+                'usd': prices['Value'].tolist()
+            }
+            price_indices[commodity['display']]['usd'].insert(0, commodity['display'])
 
         # TODO: Check that all commodities return the same date values
         prices.reset_index(inplace=True)
