@@ -18,14 +18,6 @@ class RecipeBuilder(TemplateView):
     def get_context_data(self, **kwargs):
         context = super(RecipeBuilder, self).get_context_data(**kwargs)
 
-        commodity_code = 'COM/WHEAT_MN'
-
-        commodity_data = quandl.get(
-            commodity_code,
-            collapse=self.frequency,
-            start_date=self.start_date,
-            transformation='normalize')
-
         currency_code = 'BOE/XUDLGBD'
 
         currency_data = quandl.get(
@@ -33,5 +25,36 @@ class RecipeBuilder(TemplateView):
             collapse=self.frequency,
             start_date=self.start_date,
             transformation='normalize')
+
+        commodities = [{
+            'display': 'Wheat',
+            'code': 'COM/WHEAT_MN',
+        }, {
+            'display': 'Corn',
+            'code': 'COM/CORN_2',
+        }]
+
+        price_indices = {}
+
+        for commodity in commodities:
+            prices = quandl.get(
+                commodity['code'],
+                collapse=self.frequency,
+                start_date=self.start_date,
+                transformation='normalize')
+
+            price_indices[commodity['display']] = prices['Value'].tolist()
+            price_indices[commodity['display']].insert(0, commodity['display'])
+
+        # TODO: Check that all commodities return the same date values
+        prices.reset_index(inplace=True)
+        prices['Date'] = prices['Date'].dt.strftime('%Y-%m-%d')
+        dates = prices['Date'].tolist()
+        dates.insert(0, 'date')
+
+        context.update({
+            'dates': dates,
+            'price_indices': price_indices,
+        })
 
         return context
