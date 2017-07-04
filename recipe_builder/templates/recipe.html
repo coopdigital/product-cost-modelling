@@ -39,6 +39,9 @@
       var composite = buildComposite(dates, blend, priceIndices);
 
       var chart = c3.generate({
+        title: {
+          text: 'Indexed Commodity Prices'
+        },
         data: {
           x: 'date',
           columns: [
@@ -54,6 +57,19 @@
             tick: {
               format: '%b \'%y'
             }
+          },
+          y: {
+            tick: {
+              format: d3.format('.1f')
+            }
+          }
+        },
+        tooltip: {
+          format: {
+            value: function (value) {
+                var format = d3.format('.2f');
+                return format(value);
+              }
           }
         }
       });
