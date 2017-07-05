@@ -10,8 +10,15 @@ var recipe = (function() {
     activeCommodities.each(function() {
       recipe.append(
         '<div class="row">' +
-          '<div class="col-md-6">' +
+          '<div class="col-md-4">' +
             $(this).text() +
+          '</div>' +
+          '<div class="col-md-2">' +
+          '</div>' +
+          '<div class="col-md-3">' +
+            '<p><input type="number" value=1> units</p>' +
+          '</div>' +
+          '<div class="col-md-2">' +
           '</div>' +
         '</div>');
     });
