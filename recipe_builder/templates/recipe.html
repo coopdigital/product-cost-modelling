@@ -1,63 +1,59 @@
 {% extends 'base.html' %}
+{% load staticfiles %}
 
 {% block content %}
-  <div id="chart"></div>
+  <div class="modal fade" id="commoditySelection" tabindex="-1" role="dialog" aria-labelledby="gridSystemModalLabel">
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title">Select commodities to add to your recipe</h4>
+        </div>
+        <div class="modal-body">
+          {% for commodity in commodities %}
+            <button type="button" class="btn btn-default btn-lg commodity">{{ commodity.display }}</button>
+          {% endfor %}
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Exit without changes</button>
+          <button type="button" class="btn btn-primary" id="apply">Apply changes</button>
+        </div>
+      </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+  </div><!-- /.modal -->
+
+  <div class="container hidden" id="wrapper">
+
+    <section id="recipe-section">
+      <h1>Recipe Definition</h1>
+    </section>
+
+    <section id="headline-section">
+      <h1>Headline Change</h1>
+    </section>
+
+    <section id="chart-section">
+      <h1>Indexed Commodity Prices</h1>
+      <div id="chart"></div>
+    </section>
+
+  </div>
+
 {% endblock %}
 
 {% block js %}
   {{ block.super }}
+  <script src="{% static "js/scripts.min.js" %}"></script>
   <script type="text/javascript">
-    var buildComposite = function(dates, blend, priceIndices){
-      var compositeIndex = [];
-      compositeIndex.length = dates.length
-      compositeIndex.fill(0)
-      compositeIndex[0] = 'Blend'
+    var dates = {{ dates|safe }};
+    var priceIndices = {{ price_indices|safe }};
 
-      blend.forEach(function(element){
-        index = priceIndices[element.display].usd
+    var blend = [{
+      'display': 'Corn',
+      'percentage': 0.2
+    }, {
+      'display': 'Wheat',
+      'percentage': 0.8
+    }]
 
-        for (var i = 1; i < index.length; i++) {
-          compositeIndex[i] += element.percentage * index[i]
-        }
-      });
-
-      return compositeIndex;
-    }
-
-    $(function() {
-      var dates = {{ dates|safe }};
-      var priceIndices = {{ price_indices|safe }};
-
-      var blend = [{
-        'display': 'Corn',
-        'percentage': 0.2
-      }, {
-        'display': 'Wheat',
-        'percentage': 0.8
-      }]
-
-      var composite = buildComposite(dates, blend, priceIndices);
-
-      var chart = c3.generate({
-        data: {
-          x: 'date',
-          columns: [
-            dates,
-            priceIndices['Wheat'].usd,
-            priceIndices['Corn'].usd,
-            composite
-          ]
-        },
-        axis: {
-          x: {
-            type: 'timeseries',
-            tick: {
-              format: '%b \'%y'
-            }
-          }
-        }
-      });
-
-    });
   </script>
 {% endblock %}

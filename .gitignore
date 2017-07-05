@@ -1,4 +1,11 @@
 *ipynb*
+*.log
+node_modules
 *.sqlite3
 *__pycache__*
 venv
+
+# Collected static files and generated files
+staticfiles/
+frontend/static/css
+frontend/static/js/scripts*
