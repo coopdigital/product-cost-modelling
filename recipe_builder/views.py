@@ -57,6 +57,7 @@ class RecipeBuilder(TemplateView):
         dates.insert(0, 'date')
 
         context.update({
+            'commodities': commodities,
             'dates': dates,
             'price_indices': price_indices,
         })
