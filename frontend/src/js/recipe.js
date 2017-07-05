@@ -11,18 +11,23 @@ var recipe = (function() {
       recipe.append(
         '<div class="row">' +
           '<div class="col-md-4">' +
-            $(this).text() +
+            '<p class="display">' + $(this).text() + '</p>' +
+          '</div>' +
+          '<div class="col-md-1">' +
+          // Decrement buttons
           '</div>' +
           '<div class="col-md-2">' +
+            '<p><input type="number" min=1 value=1> units</p>' +
           '</div>' +
-          '<div class="col-md-3">' +
-            '<p><input type="number" value=1> units</p>' +
-          '</div>' +
-          '<div class="col-md-2">' +
+          '<div class="col-md-1">' +
+          // Increment buttons
           '</div>' +
         '</div>');
     });
     chart.init();
+    $('#recipe-section input').change(function() {
+      chart.init();
+    });
   };
 
   return {

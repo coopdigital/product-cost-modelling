@@ -28,7 +28,7 @@
     </section>
 
     <section id="headline-section">
-      <h1>Headline Change</h1>
+      <h1>Headline Change: <span id="headline-change"></span>%</h1>
     </section>
 
     <section id="chart-section">
@@ -42,18 +42,9 @@
 
 {% block js %}
   {{ block.super }}
-  <script src="{% static "js/scripts.min.js" %}"></script>
   <script type="text/javascript">
     var dates = {{ dates|safe }};
     var priceIndices = {{ price_indices|safe }};
-
-    var blend = [{
-      'display': 'Corn',
-      'percentage': 0.2
-    }, {
-      'display': 'Wheat',
-      'percentage': 0.8
-    }]
-
   </script>
+  <script src="{% static "js/scripts.min.js" %}"></script>
 {% endblock %}
