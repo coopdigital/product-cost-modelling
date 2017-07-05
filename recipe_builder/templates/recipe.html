@@ -30,58 +30,26 @@
   {{ block.super }}
   <script src="{% static "js/scripts.min.js" %}"></script>
   <script type="text/javascript">
-    $(function() {
-      var dates = {{ dates|safe }};
-      var priceIndices = {{ price_indices|safe }};
+    var dates = {{ dates|safe }};
+    var priceIndices = {{ price_indices|safe }};
 
-      var blend = [{
-        'display': 'Corn',
-        'percentage': 0.2
-      }, {
-        'display': 'Wheat',
-        'percentage': 0.8
-      }]
+    var blend = [{
+      'display': 'Corn',
+      'percentage': 0.2
+    }, {
+      'display': 'Wheat',
+      'percentage': 0.8
+    }]
+
+    $(function() {
 
       $('#commoditySelection').modal()
-
-      var composite = recipeDefinition.buildComposite(dates, blend, priceIndices);
-
-      var chart = c3.generate({
-        data: {
-          x: 'date',
-          columns: [
-            dates,
-            priceIndices['Wheat'].usd,
-            priceIndices['Corn'].usd,
-            composite
-          ]
-        },
-        axis: {
-          x: {
-            type: 'timeseries',
-            tick: {
-              format: '%b \'%y'
-            }
-          },
-          y: {
-            tick: {
-              format: d3.format('.1f')
-            }
-          }
-        },
-        tooltip: {
-          format: {
-            value: function (value) {
-                var format = d3.format('.2f');
-                return format(value);
-              }
-          }
-        }
-      });
 
       $('#commoditySelection .commodity').click(function() {
         $(this).toggleClass('btn-success active').blur();
       });
+
+      chart.init();
 
     });
   </script>

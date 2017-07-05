@@ -3,8 +3,9 @@
   "version": "1.0.0",
   "description": "Model product cost evolution based on price changes of underlying commodities",
   "scripts": {
-    "uglify": "mkdirp frontend/static/js && uglifyjs frontend/src/js/*.js -m -o frontend/static/js/scripts.min.js",
-    "postinstall": "npm run uglify"
+    "build": "mkdirp frontend/static/js && uglifyjs frontend/src/js/*.js -m -o frontend/static/js/scripts.min.js",
+    "watch": "onchange \"frontend/src/js/*.js\" -- npm run build",
+    "postinstall": "npm run build"
   },
   "repository": {
     "type": "git",
@@ -18,5 +19,8 @@
   "dependencies": {
     "mkdirp": "^0.5.1",
     "uglify-js": "^3.0.23"
+  },
+  "devDependencies": {
+    "onchange": "^3.2.1"
   }
 }
