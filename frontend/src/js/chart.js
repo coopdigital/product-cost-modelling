@@ -1,41 +1,64 @@
-/* globals dates, blend, priceIndices */
+/* globals dates, priceIndices */
 
 var chart = (function() {
 
-  var compositeIndex;
-
   var init = function() {
-    compositeIndex = buildComposite(dates, blend, priceIndices);
-    generate(compositeIndex);
+    var recipe = getRecipe();
+    var compositeIndex = buildComposite(recipe);
+    renderChart(recipe, compositeIndex);
   };
 
-  var buildComposite = function(dates, blend, priceIndices){
-    var compositeIndex = [];
+  var getRecipe = function() {
+    components = [];
+    totalUnits = 0;
+    $('#recipe-section .row').each(function() {
+      units = $(this).find('input').val();
+      components.push({
+        display: $(this).find('.display').text(),
+        units: units
+      });
+      totalUnits += parseInt(units);
+    });
+
+    return {
+      components: components,
+      totalUnits: totalUnits
+    };
+  };
+
+  var buildComposite = function(recipe) {
+    compositeIndex = [];
     compositeIndex.length = dates.length;
     compositeIndex.fill(0);
     compositeIndex[0] = 'Blend';
 
-    blend.forEach(function(element){
+    recipe.components.forEach(function(element){
       index = priceIndices[element.display].usd;
 
       for (var i = 1; i < index.length; i++) {
-        compositeIndex[i] += element.percentage * index[i];
+        compositeIndex[i] += element.units / recipe.totalUnits * index[i];
       }
     });
+
+    var headlineChange = parseInt((compositeIndex.slice(-1)[0] - 1) * 100);
+    var sign = headlineChange > 0 ? '+' : '-';
+
+    $('#headline-change').text(sign + headlineChange);
 
     return compositeIndex;
   };
 
-  var generate = function() {
+  var renderChart = function(recipe, compositeIndex) {
+    var data = [dates];
+    components.forEach(function(element){
+      data.push(priceIndices[element.display].usd);
+    });
+    data.push(compositeIndex);
+
     c3.generate({
       data: {
         x: 'date',
-        columns: [
-          dates,
-          priceIndices['Wheat'].usd,
-          priceIndices['Corn'].usd,
-          compositeIndex
-        ]
+        columns: data
       },
       axis: {
         x: {
