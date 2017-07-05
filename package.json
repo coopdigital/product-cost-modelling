@@ -1,0 +1,22 @@
+{
+  "name": "product-cost-modelling",
+  "version": "1.0.0",
+  "description": "Model product cost evolution based on price changes of underlying commodities",
+  "scripts": {
+    "uglify": "mkdirp frontend/static/js && uglifyjs frontend/src/js/*.js -m -o frontend/static/js/scripts.min.js",
+    "postinstall": "npm run uglify"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/coopdigital/product-cost-modelling.git"
+  },
+  "author": "Data Science Team",
+  "bugs": {
+    "url": "https://github.com/coopdigital/product-cost-modelling/issues"
+  },
+  "homepage": "https://github.com/coopdigital/product-cost-modelling#readme",
+  "dependencies": {
+    "mkdirp": "^0.5.1",
+    "uglify-js": "^3.0.23"
+  }
+}

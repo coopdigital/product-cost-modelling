@@ -1,11 +1,12 @@
 {% extends 'base.html' %}
+{% load staticfiles %}
 
 {% block content %}
   <div class="modal fade" id="commoditySelection" tabindex="-1" role="dialog" aria-labelledby="gridSystemModalLabel">
     <div class="modal-dialog modal-lg" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <h4 class="modal-title">Click to add commodities</h4>
+          <h4 class="modal-title">Select commodities to add to your recipe</h4>
         </div>
         <div class="modal-body">
           {% for commodity in commodities %}
@@ -20,29 +21,15 @@
     </div><!-- /.modal-dialog -->
   </div><!-- /.modal -->
 
+  <h1>Indexed Commodity Prices</h1>
+
   <div id="chart"></div>
 {% endblock %}
 
 {% block js %}
   {{ block.super }}
+  <script src="{% static "js/scripts.min.js" %}"></script>
   <script type="text/javascript">
-    var buildComposite = function(dates, blend, priceIndices){
-      var compositeIndex = [];
-      compositeIndex.length = dates.length
-      compositeIndex.fill(0)
-      compositeIndex[0] = 'Blend'
-
-      blend.forEach(function(element){
-        index = priceIndices[element.display].usd
-
-        for (var i = 1; i < index.length; i++) {
-          compositeIndex[i] += element.percentage * index[i]
-        }
-      });
-
-      return compositeIndex;
-    }
-
     $(function() {
       var dates = {{ dates|safe }};
       var priceIndices = {{ price_indices|safe }};
@@ -57,12 +44,9 @@
 
       $('#commoditySelection').modal()
 
-      var composite = buildComposite(dates, blend, priceIndices);
+      var composite = recipeDefinition.buildComposite(dates, blend, priceIndices);
 
       var chart = c3.generate({
-        title: {
-          text: 'Indexed Commodity Prices'
-        },
         data: {
           x: 'date',
           columns: [
