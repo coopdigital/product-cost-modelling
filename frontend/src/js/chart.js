@@ -2,8 +2,10 @@
 
 var chart = (function() {
 
+  var compositeIndex;
+
   var init = function() {
-    var compositeIndex = buildComposite(dates, blend, priceIndices);
+    compositeIndex = buildComposite(dates, blend, priceIndices);
     generate(compositeIndex);
   };
 
@@ -24,7 +26,7 @@ var chart = (function() {
     return compositeIndex;
   };
 
-  var generate = function(compositeIndex) {
+  var generate = function() {
     c3.generate({
       data: {
         x: 'date',

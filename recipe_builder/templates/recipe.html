@@ -15,15 +15,29 @@
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-default" data-dismiss="modal">Exit without changes</button>
-          <button type="button" class="btn btn-primary">Apply changes</button>
+          <button type="button" class="btn btn-primary" id="apply">Apply changes</button>
         </div>
       </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
   </div><!-- /.modal -->
 
-  <h1>Indexed Commodity Prices</h1>
+  <div class="container hidden" id="wrapper">
 
-  <div id="chart"></div>
+    <section id="recipe-section">
+      <h1>Recipe Definition</h1>
+    </section>
+
+    <section id="headline-section">
+      <h1>Headline Change</h1>
+    </section>
+
+    <section id="chart-section">
+      <h1>Indexed Commodity Prices</h1>
+      <div id="chart"></div>
+    </section>
+
+  </div>
+
 {% endblock %}
 
 {% block js %}
@@ -41,16 +55,5 @@
       'percentage': 0.8
     }]
 
-    $(function() {
-
-      $('#commoditySelection').modal()
-
-      $('#commoditySelection .commodity').click(function() {
-        $(this).toggleClass('btn-success active').blur();
-      });
-
-      chart.init();
-
-    });
   </script>
 {% endblock %}
