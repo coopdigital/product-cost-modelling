@@ -50,10 +50,14 @@ var chart = (function() {
 
   var renderChart = function(recipe, compositeIndex) {
     var data = [dates];
+
     components.forEach(function(element){
       data.push(priceIndices[element.display].usd);
     });
-    data.push(compositeIndex);
+
+    if (recipe.components.length > 1) {
+      data.push(compositeIndex);
+    }
 
     c3.generate({
       data: {
