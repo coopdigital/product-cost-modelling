@@ -17,7 +17,7 @@ var commoditySelection = (function() {
       isModified = true;
     });
 
-    dismiss.click(dismissHandler);
+    modal.on('hidden.bs.modal', dismissHandler);
 
     apply.click(applyHandler);
 
@@ -50,6 +50,9 @@ var commoditySelection = (function() {
     $('#wrapper').removeClass('hidden');
 
     if (isModified) {
+      var recipeName = $('#recipe-name-input').val();
+      $('#recipe-name').text(recipeName);
+
       commodities.removeClass('displayed');
       commodities.filter('.btn-success').addClass('displayed');
       recipe.init();
