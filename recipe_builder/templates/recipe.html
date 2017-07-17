@@ -6,6 +6,15 @@
     <div class="modal-dialog modal-lg" role="document">
       <div class="modal-content">
         <div class="modal-header">
+          <h4 class="modal-title">Select start month [optional]</h4>
+        </div>
+        <div class="modal-body">
+          <p>Defaults to 12 months ago: select a month if you need a different timespan, e.g. since you're last negotation</p>
+          <p class="bg-warning">Note this will reload the page, losing your current recipe so set it first!</p>
+          <input type="month" id="date-picker" value="{{ date|slice:"0:7" }}">
+          <button type="button" class="btn btn-default btn-xs" id="date-submit">Use this date</button>
+        </div>
+        <div class="modal-header">
           <h4 class="modal-title">Select a name for your recipe</h4>
         </div>
         <div class="modal-body">

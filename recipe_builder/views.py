@@ -16,6 +16,12 @@ class RecipeBuilder(TemplateView):
     def get_context_data(self, **kwargs):
         context = super(RecipeBuilder, self).get_context_data(**kwargs)
 
+        if 'start_date' in kwargs.keys():
+            # Deliberately only add the date to the context if it has been
+            # proactively set (trying to emphasise that this is optional)
+            context['date'] = kwargs['start_date']
+            self.start_date = '{}-01'.format(context['date'])
+
         currency_code = 'BOE/XUDLGBD'
 
         currency_data = quandl.get(
