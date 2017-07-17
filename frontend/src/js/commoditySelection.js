@@ -22,6 +22,7 @@ var commoditySelection = (function() {
     apply.click(applyHandler);
 
     modify.click(function() {
+      isModified = false;
       modal.modal('show');
     });
   };
@@ -38,8 +39,6 @@ var commoditySelection = (function() {
     commodities
       .filter('.displayed')
       .addClass('btn-success active');
-
-    isModified = false;
   };
 
   var applyHandler = function() {
@@ -54,8 +53,6 @@ var commoditySelection = (function() {
       commodities.filter('.btn-success').addClass('displayed');
       recipe.init();
     }
-
-    isModified = false;
   };
 
   return {
