@@ -3,6 +3,7 @@
 var commoditySelection = (function() {
 
   var modal = $('#commoditySelection');
+  var dateSubmit = $('#date-submit');
   var commodities = modal.find('.commodity');
   var dismiss = modal.find('#dismiss');
   var apply = modal.find('#apply');
@@ -12,12 +13,17 @@ var commoditySelection = (function() {
   var init = function() {
     modal.modal();
 
+    dateSubmit.click(function() {
+      var date = $('#date-picker').val();
+      window.location.href = '/' + date + '/';
+    });
+
     commodities.click(function() {
       $(this).toggleClass('btn-success active').blur();
       isModified = true;
     });
 
-    dismiss.click(dismissHandler);
+    modal.on('hidden.bs.modal', dismissHandler);
 
     apply.click(applyHandler);
 
@@ -50,6 +56,9 @@ var commoditySelection = (function() {
     $('#wrapper').removeClass('hidden');
 
     if (isModified) {
+      var recipeName = $('#recipe-name-input').val();
+      $('#recipe-name').text(recipeName);
+
       commodities.removeClass('displayed');
       commodities.filter('.btn-success').addClass('displayed');
       recipe.init();
