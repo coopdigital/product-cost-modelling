@@ -14,7 +14,7 @@
           {% endfor %}
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-default" data-dismiss="modal">Exit without changes</button>
+          <button type="button" class="btn btn-default" data-dismiss="modal" id='dismiss'>Exit without changes</button>
           <button type="button" class="btn btn-primary" id="apply">Apply changes</button>
         </div>
       </div><!-- /.modal-content -->
@@ -24,7 +24,13 @@
   <div class="container hidden" id="wrapper">
 
     <section id="recipe-section">
-      <h1>Recipe Definition</h1>
+      <h1>Recipe: <span id="recipe-name"></span></h1>
+      <div id="ingredients"></div>
+      <div class="row">
+        <div class="col-xs-12">
+          <button type="button" class="btn btn-default" id="modify">Modify ingredients</button>
+        </div>
+      </div>
     </section>
 
     <section id="headline-section">

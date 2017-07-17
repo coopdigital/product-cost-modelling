@@ -11,7 +11,7 @@ var chart = (function() {
   var getRecipe = function() {
     components = [];
     totalUnits = 0;
-    $('#recipe-section .row').each(function() {
+    $('#ingredients .row').each(function() {
       units = $(this).find('input').val();
       components.push({
         display: $(this).find('.display').text(),
@@ -68,6 +68,10 @@ var chart = (function() {
           }
         },
         y: {
+          min: 0,
+          padding: {
+            bottom: 0
+          },
           tick: {
             format: d3.format('.1f')
           }
