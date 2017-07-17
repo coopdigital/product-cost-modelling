@@ -10,8 +10,8 @@
         </div>
         <div class="modal-body">
           <p>Defaults to 12 months ago: select a month if you need a different timespan, e.g. since you're last negotation</p>
-          <p class="bg-warning">Note this will reload the page, losing your current recipe so set it first!</p>
-          <input type="month" id="date-picker" value="{{ date|slice:"0:7" }}">
+          <p class="bg-warning">Note this will reload the page - losing your current recipe! - so set it first!</p>
+          <input type="month" id="date-picker" value="{{ date }}">
           <button type="button" class="btn btn-default btn-xs" id="date-submit">Use this date</button>
         </div>
         <div class="modal-header">
@@ -27,6 +27,7 @@
           {% for commodity in commodities %}
             <button type="button" class="btn btn-default commodity">{{ commodity.display }}</button>
           {% endfor %}
+          <div class="alert alert-danger hidden" role="alert" id="no-selection-warning">Please select one or more commodities and click 'Apply changes'</div>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-default" data-dismiss="modal" id='dismiss'>Exit without changes</button>

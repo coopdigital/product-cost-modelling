@@ -21,6 +21,9 @@ var commoditySelection = (function() {
     commodities.click(function() {
       $(this).toggleClass('btn-success active').blur();
       isModified = true;
+      if (commodities.filter('.active').length) {
+        $('#no-selection-warning').addClass('hidden');
+      }
     });
 
     modal.on('hidden.bs.modal', dismissHandler);
@@ -37,6 +40,12 @@ var commoditySelection = (function() {
     // commodities must reflect latest DOM state
     commodities = $('#commoditySelection').find('.commodity');
 
+    if (commodities.length && !commodities.filter('.displayed').length) {
+      modal.modal('show');
+      displayWarning();
+      return;
+    }
+
     commodities
       .filter('.btn-success')
       .not('.displayed')
@@ -51,18 +60,28 @@ var commoditySelection = (function() {
     // commodities must reflect latest DOM state
     commodities = $('#commoditySelection').find('.commodity');
 
-    modal.modal('hide');
-    // Must be visible before trying to render c3 chart the first time!
-    $('#wrapper').removeClass('hidden');
-
     if (isModified) {
       var recipeName = $('#recipe-name-input').val();
       $('#recipe-name').text(recipeName);
 
       commodities.removeClass('displayed');
       commodities.filter('.btn-success').addClass('displayed');
-      recipe.init();
     }
+
+    if (commodities.filter('.displayed').length) {
+      modal.modal('hide');
+
+      // Must be visible before trying to render c3 chart the first time!
+      $('#wrapper').removeClass('hidden');
+
+      recipe.init();
+    } else {
+      displayWarning();
+    }
+  };
+
+  var displayWarning = function() {
+    $('#no-selection-warning').removeClass('hidden');
   };
 
   return {
