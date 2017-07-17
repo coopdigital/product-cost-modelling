@@ -46,6 +46,7 @@ var commoditySelection = (function() {
     commodities = $('#commoditySelection').find('.commodity');
 
     modal.modal('hide');
+    // Must be visible before trying to render c3 chart the first time!
     $('#wrapper').removeClass('hidden');
 
     if (isModified) {
