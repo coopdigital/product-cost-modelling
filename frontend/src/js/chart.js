@@ -35,13 +35,17 @@ var chart = (function() {
     recipe.components.forEach(function(element){
       index = priceIndices[element.display].usd;
 
-      for (var i = 1; i < index.length; i++) {
+      for (var i = 1; i < compositeIndex.length; i++) {
+        // Indexes can be a month behind: filling forward feels reasonable
+        if (!index[i]) {
+          index[i] = index[i - 1];
+        }
         compositeIndex[i] += element.units / recipe.totalUnits * index[i];
       }
     });
 
     var headlineChange = parseInt(compositeIndex.slice(-1)[0] - 100);
-    var sign = headlineChange >= 0 ? '+' : '-';
+    var sign = headlineChange >= 0 ? '+' : '';
 
     $('#headline-change').text(sign + headlineChange);
 
