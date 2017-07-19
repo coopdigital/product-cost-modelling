@@ -40,8 +40,8 @@ var chart = (function() {
       }
     });
 
-    var headlineChange = parseInt((compositeIndex.slice(-1)[0] - 1) * 100);
-    var sign = headlineChange > 0 ? '+' : '-';
+    var headlineChange = parseInt(compositeIndex.slice(-1)[0] - 100);
+    var sign = headlineChange >= 0 ? '+' : '-';
 
     $('#headline-change').text(sign + headlineChange);
 

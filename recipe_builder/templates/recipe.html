@@ -24,8 +24,12 @@
           <h4 class="modal-title">Select commodities to include in your recipe</h4>
         </div>
         <div class="modal-body">
-          {% for commodity in commodities %}
-            <button type="button" class="btn btn-default commodity">{{ commodity.display }}</button>
+          {% for group in commodities %}
+            <div class="row">
+              {% for commodity in group %}
+                <button type="button" class="btn btn-default commodity">{{ commodity.display }}</button>
+              {% endfor %}
+            </div>
           {% endfor %}
           <div class="alert alert-danger hidden" role="alert" id="no-selection-warning">Please select one or more commodities and click 'Apply changes'</div>
         </div>
@@ -48,6 +52,8 @@
         </div>
       </div>
     </section>
+
+    <hr>
 
     <section id="headline-section">
       <h1>Headline Change: <span id="headline-change"></span>%</h1>

@@ -3,6 +3,7 @@ from django.views.generic import TemplateView
 import pandas as pd
 import quandl
 
+from recipe_builder.commodities import commodities
 
 quandl.ApiConfig.api_key = settings.QUANDL_API_KEY
 
@@ -10,8 +11,19 @@ quandl.ApiConfig.api_key = settings.QUANDL_API_KEY
 class RecipeBuilder(TemplateView):
     template_name = 'recipe.html'
     frequency = 'monthly'
-    start_date = pd.to_datetime('now') - pd.DateOffset(years=1)
+
+    # Explicitly set end date to the last day of the previous month: ensures
+    # each commodity collapses to the same number of datapoints irrespective of
+    # underlying data granularity (otherwise daily values include the current
+    # month but monthly don't!)
+    end_date = pd.to_datetime('now')
+    end_date = end_date.replace(day=1)
+    end_date = end_date - pd.DateOffset(days=1)
+
+    start_date = end_date - pd.DateOffset(years=1)
+
     start_date = start_date.strftime('%Y-%m-%d')
+    end_date = end_date.strftime('%Y-%m-%d')
 
     def get_context_data(self, **kwargs):
         context = super(RecipeBuilder, self).get_context_data(**kwargs)
@@ -28,39 +40,29 @@ class RecipeBuilder(TemplateView):
             currency_code,
             collapse=self.frequency,
             start_date=self.start_date,
+            end_date=self.end_date,
             transformation='normalize')
-
-        commodities = [{
-            'display': 'Wheat',
-            'code': 'COM/WHEAT_MN',
-        }, {
-            'display': 'Corn',
-            'code': 'COM/CORN_2',
-        }]
 
         price_indices = {}
 
-        for commodity in commodities:
-            index = quandl.get(
-                commodity['code'],
-                collapse=self.frequency,
-                start_date=self.start_date,
-                transformation='normalize')
+        # Grouped for display purposes, e.g. meat and fish
+        for group in commodities:
+            for commodity in group:
+                index = quandl.get(
+                    commodity['code'],
+                    collapse=self.frequency,
+                    start_date=self.start_date,
+                    end_date=self.end_date,
+                    transformation='normalize')
 
-            # Allows straightforward multiplication for composite
-            index['Value'] = index['Value'] / 100
+                price_indices[commodity['display']] = {
+                    # Returned column names are not consistent so use index
+                    'usd': [commodity['display']] + index.iloc[:, 0].tolist()
+                }
 
-            # TODO: Return indices adjusted for target currencies
-            price_indices[commodity['display']] = {
-                'usd': index['Value'].tolist()
-            }
-            price_indices[commodity['display']]['usd'].insert(0, commodity['display'])
-
-        # TODO: Check that all commodities return the same date values
         index.reset_index(inplace=True)
         index['Date'] = index['Date'].dt.strftime('%Y-%m-%d')
-        dates = index['Date'].tolist()
-        dates.insert(0, 'date')
+        dates = ['date'] + index['Date'].tolist()
 
         context.update({
             'commodities': commodities,
