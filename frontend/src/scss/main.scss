@@ -1,3 +1,41 @@
+$desktop-width: 768px !default;
+
+body {
+  line-height: 1.7;
+  color: #282828;
+  font-family: "AvenirNextLTW01-Regular", "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+h1, p {
+  font-weight: normal;
+  margin-top: 0;
+}
+
+h1 {
+  font-size: 1.875em;
+  font-family: "AvenirNextLTW01-Demi", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  line-height: 1.4;
+  margin-bottom: 16px;
+  @media (min-width: $desktop-width) {
+    font-size: 2.875em;
+    margin-bottom: 32px;
+  }
+}
+
+p {
+  font-size: 1em;
+  margin-bottom: 8px;
+  font-family: "AvenirNextLTW01-Regular","Helvetica Neue",Helvetica,Arial,sans-serif;
+  @media (min-width: $desktop-width) {
+    font-size: 1.25em;
+    margin-bottom: 16px;
+  }
+}
+
+hr {
+  border-top: 1px solid #c4c4c4;
+}
+
 #commoditySelection {
   .row {
     margin: 0 0 15px;
@@ -16,8 +54,10 @@
   .row {
     margin: 0;
   }
+
   #ingredients {
     margin-top: 15px;
+
     .row {
       margin: 5px 0 0;
     }
@@ -26,4 +66,18 @@
 
 .alert {
   margin-top: 15px;
+}
+
+#chart {
+  .c3-axis, .c3-legend-item, .c3-tooltip td {
+    font-family: "AvenirNextLTW01-Regular", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 14px;
+    text {
+      font-size: 1em;
+    }
+  }
+
+  .c3-line-Blend {
+    stroke-width: 5px;
+  }
 }

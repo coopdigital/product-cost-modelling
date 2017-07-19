@@ -13,10 +13,10 @@ var recipe = (function() {
     activeCommodities.each(function() {
       ingredients.append(
         '<div class="row">' +
-          '<div class="col-md-4">' +
+          '<div class="col-xs-8 col-md-4">' +
             '<p class="display">' + $(this).text() + '</p>' +
           '</div>' +
-          '<div class="col-md-2 input">' +
+          '<div class="col-xs-4 col-md-2 input">' +
             '<p><input type="number" min=1 value=1> units</p>' +
           '</div>' +
         '</div>');

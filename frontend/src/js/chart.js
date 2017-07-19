@@ -66,29 +66,47 @@ var chart = (function() {
     c3.generate({
       data: {
         x: 'date',
-        columns: data
+        columns: data,
+        colors: {
+          Blend: '#282828',
+        }
       },
       axis: {
         x: {
           type: 'timeseries',
+          padding: {
+            // In milliseconds for timeseries!
+            right: 1.5e+9
+          },
           tick: {
             format: '%b \'%y'
           }
         },
         y: {
-          min: 0,
+          min: 50,
+          max: 150,
           padding: {
+            top: 10,
             bottom: 0
           },
           tick: {
-            format: d3.format('.1f')
+            count: 5,
+            values: [50, 75, 100, 125, 150]
           }
+        }
+      },
+      point: {
+        show: false
+      },
+      grid: {
+        y: {
+          show: true
         }
       },
       tooltip: {
         format: {
           value: function (value) {
-              var format = d3.format('.2f');
+              var format = d3.format('.0f');
               return format(value);
             }
         }
