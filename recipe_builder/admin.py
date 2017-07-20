@@ -1,3 +1,11 @@
-# from django.contrib import admin
+from django.contrib import admin
 
-# Register your models here.
+from recipe_builder.models import Commodity
+
+
+class CommodityAdmin(admin.ModelAdmin):
+    list_display = ('commodity_code', 'name', 'description')
+    search_fields = ('commodity_code', 'name', 'description')
+
+
+admin.site.register(Commodity, CommodityAdmin)
