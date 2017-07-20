@@ -47,11 +47,12 @@ class RecipeBuilder(TemplateView):
         price_indices = {}
 
         commodites_metadata = Commodity.objects.all().values_list()
+        dates = []
 
         # Grouped for display purposes, e.g. meat and fish
         for group in commodities:
             for commodity in group:
-                index = quandl.get(
+                dataset = quandl.get(
                     commodity['code'],
                     collapse=self.frequency,
                     start_date=self.start_date,
@@ -71,13 +72,20 @@ class RecipeBuilder(TemplateView):
 
                 price_indices[commodity['display']] = {
                     # Returned column names are not consistent so use index
-                    'usd': [commodity['display']] + index.iloc[:, 0].tolist(),
+                    'usd': [commodity['display']] + dataset.iloc[:, 0].tolist(),
                     'description': description
                 }
 
-        index.reset_index(inplace=True)
-        index['Date'] = index['Date'].dt.strftime('%Y-%m-%d')
-        dates = ['date'] + index['Date'].tolist()
+                index_name = dataset.index.name
+                dataset.reset_index(inplace=True)
+                dataset['Date'] = dataset[index_name].dt.strftime('%Y-%m-%d')
+
+                commodity_dates = ['date'] + dataset['Date'].tolist()
+
+                # If dates not yet set or previous datasets were missing dates,
+                # take the new, longer list of dates
+                if not dates or len(commodity_dates) > len(dates):
+                    dates = commodity_dates
 
         context.update({
             'commodities': commodities,
