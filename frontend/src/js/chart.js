@@ -44,10 +44,16 @@ var chart = (function() {
       }
     });
 
-    var headlineChange = parseInt(compositeIndex.slice(-1)[0] - 100);
-    var sign = headlineChange >= 0 ? '+' : '';
+    var headlineChange = Math.round(compositeIndex.slice(-1)[0] - 100);
+    if (headlineChange > 0) {
+      headlineChange = 'increased by ' + headlineChange + '%';
+    } else if (headlineChange < 0) {
+      headlineChange = 'decreased by ' + headlineChange + '%';
+    } else {
+      headlineChange = 'did not change';
+    }
 
-    $('#headline-change').text(sign + headlineChange);
+    $('#headline-change').text(headlineChange);
 
     return compositeIndex;
   };

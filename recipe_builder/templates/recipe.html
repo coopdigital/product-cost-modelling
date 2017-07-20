@@ -45,6 +45,7 @@
 
     <section id="recipe-section">
       <h1>Recipe: <span id="recipe-name"></span></h1>
+      <p id="recipe-instruction">Assign units based on relative cost at the start of the period:</p>
       <div id="ingredients"></div>
       <div class="row">
         <div class="col-xs-12">
@@ -55,14 +56,22 @@
 
     <hr>
 
-    <section id="headline-section">
-      <h1>Headline Change: <span id="headline-change"></span>%</h1>
-    </section>
-
     <section id="chart-section">
       <h1>Indexed Commodity Prices</h1>
       <div id="chart"></div>
     </section>
+
+    <section id="headline-section">
+      <p class="intro">Based on the above recipe, the overall product cost <span id="headline-change"></span></p>
+    </section>
+
+    <footer id="footer">
+      <p>The chart shows the cost evolution over the period for each recipe ingredient and the cost evolution for the overall product based on the relative proportion of ingredients defined in the recipe.</p>
+      <p>Individual data points represent the most recent available USD/unit spot price for the given month, indexed relative to a value of 100 at the start of the period.</p>
+      <p>Where a value is not available for a given month values are applied from the previous available month.</p>
+      <p>Data is sourced from <a href="https://www.quandl.com" target="_blank">Quandl</a> using the following datasets from the <a href="https://www.quandl.com/data/COM-WIKI-Commodity-Prices" target="_blank">WIKI Commodity Prices</a> database:</p>
+      <ul id="commodity-detail"></ul>
+    </footer>
 
   </div>
 

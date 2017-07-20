@@ -25,9 +25,19 @@ h1 {
 p {
   font-size: 1em;
   margin-bottom: 8px;
-  font-family: "AvenirNextLTW01-Regular","Helvetica Neue",Helvetica,Arial,sans-serif;
   @media (min-width: $desktop-width) {
     font-size: 1.25em;
+    margin-bottom: 16px;
+  }
+}
+
+.intro {
+  font-size: 1.25em;
+  margin-top: 8px;
+  margin-bottom: 8px;
+  @media (min-width: $desktop-width) {
+    font-size: 1.625em;
+    margin-top: 16px;
     margin-bottom: 16px;
   }
 }
@@ -46,8 +56,12 @@ hr {
   }
 }
 
+.alert {
+  margin-top: 15px;
+}
+
 #recipe-section input {
-  width: 3em;
+  width: 2.5em;
 }
 
 #recipe-section {
@@ -64,10 +78,6 @@ hr {
   }
 }
 
-.alert {
-  margin-top: 15px;
-}
-
 #chart {
   .c3-axis, .c3-legend-item, .c3-tooltip td {
     font-family: "AvenirNextLTW01-Regular", "Helvetica Neue", Helvetica, Arial, sans-serif;
@@ -79,5 +89,11 @@ hr {
 
   .c3-line-Blend {
     stroke-width: 5px;
+  }
+}
+
+#footer {
+  p, li {
+    font-size: 1em;
   }
 }

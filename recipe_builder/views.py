@@ -4,6 +4,7 @@ import pandas as pd
 import quandl
 
 from recipe_builder.commodities import commodities
+from recipe_builder.models import Commodity
 
 quandl.ApiConfig.api_key = settings.QUANDL_API_KEY
 
@@ -45,6 +46,8 @@ class RecipeBuilder(TemplateView):
 
         price_indices = {}
 
+        commodites_metadata = Commodity.objects.all().values_list()
+
         # Grouped for display purposes, e.g. meat and fish
         for group in commodities:
             for commodity in group:
@@ -55,9 +58,21 @@ class RecipeBuilder(TemplateView):
                     end_date=self.end_date,
                     transformation='normalize')
 
+                metadata = commodites_metadata.get(commodity_code=commodity['code'])
+                name = metadata[1]
+                description = metadata[2]
+
+                if description == 'This dataset has no description.':
+                    description = name
+                elif 'Data: IMF' in description:
+                    # Both elements contain useful information; the description
+                    # alone is rather dry and unhelpful
+                    description = '{} - {}'.format(name, description)
+
                 price_indices[commodity['display']] = {
                     # Returned column names are not consistent so use index
-                    'usd': [commodity['display']] + index.iloc[:, 0].tolist()
+                    'usd': [commodity['display']] + index.iloc[:, 0].tolist(),
+                    'description': description
                 }
 
         index.reset_index(inplace=True)
