@@ -11,8 +11,11 @@ https://docs.djangoproject.com/en/1.11/ref/settings/
 """
 
 import dj_database_url
+import django12factor
 import os
 import sys
+
+d12f = django12factor.factorise()
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -22,13 +25,27 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/1.11/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'p3sr&=m9a2=8ab=jq0!^fr_f%-c9g=(%$i$z6u3=&ceanxo8v8'
+SECRET_KEY = d12f['SECRET_KEY']
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = d12f['DEBUG']
 
 ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'weedy-salads-remit.herokuapp.com']
 
+HTTP_ONLY = django12factor.getenv_bool('HTTP_ONLY')
+
+if not HTTP_ONLY:  # pragma: no cover
+    CSRF_COOKIE_HTTPONLY = True
+    CSRF_COOKIE_SECURE = True
+    SECURE_BROWSER_XSS_FILTER = True
+    SECURE_CONTENT_TYPE_NOSNIFF = True
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+    SECURE_HSTS_SECONDS = 60 * 60 * 24
+    SECURE_SSL_REDIRECT = True
+    SESSION_COOKIE_SECURE = True
+    X_FRAME_OPTIONS = 'DENY'
+
+    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')  # Heroku
 
 # Application definition
 
