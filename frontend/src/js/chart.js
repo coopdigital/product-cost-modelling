@@ -4,8 +4,8 @@ var chart = (function() {
 
   var init = function() {
     var recipe = getRecipe();
-    var compositeIndex = buildComposite(recipe);
-    renderChart(recipe, compositeIndex);
+    var composite = buildComposite(recipe);
+    renderChart(recipe, composite);
   };
 
   var getRecipe = function() {
@@ -27,7 +27,9 @@ var chart = (function() {
   };
 
   var buildComposite = function(recipe) {
-    compositeIndex = [];
+    var maxDeviation = 0;
+    var compositeIndex = [];
+
     compositeIndex.length = dates.length;
     compositeIndex.fill(0);
     compositeIndex[0] = 'Blend';
@@ -39,6 +41,10 @@ var chart = (function() {
         // Indexes can be a month behind: filling forward feels reasonable
         if (!index[i]) {
           index[i] = index[i - 1];
+        }
+        var deviation = Math.abs(100 - index[i]);
+        if (deviation > maxDeviation) {
+          maxDeviation = deviation;
         }
         compositeIndex[i] += element.units / recipe.totalUnits * index[i];
       }
@@ -55,10 +61,13 @@ var chart = (function() {
 
     $('#headline-change').text(headlineChange);
 
-    return compositeIndex;
+    return {
+      maxDeviation: maxDeviation,
+      index: compositeIndex
+    };
   };
 
-  var renderChart = function(recipe, compositeIndex) {
+  var renderChart = function(recipe, composite) {
     var data = [dates];
 
     components.forEach(function(element){
@@ -66,7 +75,7 @@ var chart = (function() {
     });
 
     if (recipe.components.length > 1) {
-      data.push(compositeIndex);
+      data.push(composite.index);
     }
 
     c3.generate({
@@ -89,15 +98,14 @@ var chart = (function() {
           }
         },
         y: {
-          min: 50,
-          max: 150,
+          min: 100 - Math.ceil(composite.maxDeviation / 20) * 20,
+          max: 100 + Math.ceil(composite.maxDeviation / 20) * 20,
           padding: {
             top: 10,
             bottom: 0
           },
           tick: {
-            count: 5,
-            values: [50, 75, 100, 125, 150]
+            values: [0, 20, 40, 60, 80, 100, 120, 140, 160, 180, 200]
           }
         }
       },
